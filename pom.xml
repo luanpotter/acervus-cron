@@ -14,4 +14,18 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>xyz.luan</groupId>
+            <artifactId>http-facade</artifactId>
+            <version>1.2.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.10.2</version>
+        </dependency>
+
+    </dependencies>
+
 </project>
