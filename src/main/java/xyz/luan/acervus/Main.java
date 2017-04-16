@@ -7,7 +7,9 @@ import org.jsoup.select.Elements;
 import xyz.luan.facade.HttpFacade;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,14 +19,24 @@ public class Main {
     private static final String DOMAIN = "http://acervus.unicamp.br/";
 
     public static void main(String[] args) throws IOException {
-        Map<String, String> cookies = doLogin(args[0], args[1]);
+        String user = args[0];
+        String pass = args[1];
+        renewal(user, pass);
+    }
+
+    private static void renewal(String user, String pass) throws IOException {
+        final String today = new SimpleDateFormat("DD/MM/yyyy").format(new Date());
+        Map<String, String> cookies = doLogin(user, pass);
         List<Book> ids = extractBookIds(cookies);
-        String sCods = ids.stream().map(b -> b.id).collect(Collectors.joining(","));
+        String sCods = ids.stream().filter(b -> b.date.equals(today)).map(b -> b.id).collect(Collectors.joining(","));
+        if (sCods.isEmpty()) {
+            System.out.println("Nothing to renewal!");
+            return;
+        }
         String url = "index.asp?content=circulacoes&acao=renovacao&num_circulacao=" + sCods;
-        HttpFacade renovar = new HttpFacade(DOMAIN + url);
-        renovar.cookies(cookies);
-        String html = renovar.get().content();
-        System.out.println(html);
+        HttpFacade renewal = new HttpFacade(DOMAIN + url);
+        renewal.cookies(cookies);
+        renewal.get();
     }
 
     private static List<Book> extractBookIds(Map<String, String> cookies) throws IOException {
