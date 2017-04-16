@@ -27,11 +27,11 @@ public class Service {
         renewal(user, pass);
     }
 
-    public static void renewal(String user, String pass) throws IOException {
+    public static String renewal(String user, String pass) throws IOException {
         final String today = new SimpleDateFormat("DD/MM/yyyy").format(new Date());
         Map<String, String> cookies = doLogin(user, pass);
         List<Book> ids = extractBookIds(cookies);
-        String sCods = FluentIterable.from(ids).filter(new Predicate<Book>() {
+        FluentIterable<String> codList = FluentIterable.from(ids).filter(new Predicate<Book>() {
             @Override
             public boolean apply(Book book) {
                 return book.date.equals(today);
@@ -41,15 +41,17 @@ public class Service {
             public String apply(Book book) {
                 return book.id;
             }
-        }).join(Joiner.on(","));
-        if (sCods.isEmpty()) {
-            System.out.println("Nothing to renewal!");
-            return;
+        });
+        if (codList.isEmpty()) {
+            return "Nothing to renewal!";
         }
+        int count = codList.size();
+        String sCods = codList.join(Joiner.on(","));
         String url = "index.asp?content=circulacoes&acao=renovacao&num_circulacao=" + sCods;
         HttpFacade renewal = new HttpFacade(DOMAIN + url);
         renewal.cookies(cookies);
         renewal.get();
+        return "Renewed " + count + " books.";
     }
 
     private static List<Book> extractBookIds(Map<String, String> cookies) throws IOException {
@@ -87,11 +89,10 @@ public class Service {
         }
     }
 
-    private static Map<String, String> doLogin(String email, String senha) throws IOException {
+    private static Map<String, String> doLogin(String email, String password) throws IOException {
         HttpFacade login = new HttpFacade(DOMAIN + "asp/login.asp?iIdioma=0&iBanner=0&content=mensagens");
         login.header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2783.2 Safari/537.36");
-        login.body("codigo=" + email + "&senha=" + senha + "&sub_login=sim");
-
+        login.body("codigo=" + email + "&senha=" + password + "&sub_login=sim");
         return login.post().cookies();
     }
 }
