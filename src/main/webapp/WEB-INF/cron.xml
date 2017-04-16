@@ -7,6 +7,6 @@
     <cron>
         <url>/api/users/renewal</url>
         <description>Renewal all users</description>
-        <schedule>every 1 hours</schedule>
+        <schedule>every 4 hours</schedule>
     </cron>
 </cronentries>
