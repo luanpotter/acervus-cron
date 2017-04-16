@@ -7,8 +7,11 @@ import xyz.luan.acervus.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class RenewalAction extends Action<User> {
+
+    private final static Logger LOGGER = Logger.getLogger(RenewalAction.class.getName());
 
     @PUT("renewal")
     public List<String> renewalAll() {
@@ -23,6 +26,7 @@ public class RenewalAction extends Action<User> {
                 e.printStackTrace();
             }
         }
+        LOGGER.info(results.toString());
         return results;
     }
 }

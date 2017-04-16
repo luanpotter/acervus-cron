@@ -4,4 +4,9 @@
         <description>Flow Pipe Drops</description>
         <schedule>every 30 minutes</schedule>
     </cron>
+    <cron>
+        <url>/api/users/renewal</url>
+        <description>Renewal all users</description>
+        <schedule>every hour</schedule>
+    </cron>
 </cronentries>

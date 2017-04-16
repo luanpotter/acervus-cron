@@ -12,13 +12,12 @@ import xyz.luan.facade.HttpFacade;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.logging.Logger;
 
 public class Service {
 
+    private final static Logger LOGGER = Logger.getLogger(Service.class.getName());
     private static final String DOMAIN = "http://acervus.unicamp.br/";
 
     public static void main(String[] args) throws IOException {
@@ -28,7 +27,8 @@ public class Service {
     }
 
     public static String renewal(String user, String pass) throws IOException {
-        final String today = new SimpleDateFormat("DD/MM/yyyy").format(new Date());
+        final String today = getToday();
+
         Map<String, String> cookies = doLogin(user, pass);
         List<Book> ids = extractBookIds(cookies);
         FluentIterable<String> codList = FluentIterable.from(ids).filter(new Predicate<Book>() {
@@ -52,6 +52,15 @@ public class Service {
         renewal.cookies(cookies);
         renewal.get();
         return "Renewed " + count + " books.";
+    }
+
+    private static String getToday() {
+        SimpleDateFormat sdf = new SimpleDateFormat("DD/MM/yyyy");
+        sdf.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
+
+        String today = sdf.format(new Date());
+        LOGGER.info("Today : " + today);
+        return today;
     }
 
     private static List<Book> extractBookIds(Map<String, String> cookies) throws IOException {
