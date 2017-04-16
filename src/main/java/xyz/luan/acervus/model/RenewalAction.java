@@ -1,6 +1,6 @@
 package xyz.luan.acervus.model;
 
-import io.yawp.commons.http.annotation.PUT;
+import io.yawp.commons.http.annotation.GET;
 import io.yawp.repository.actions.Action;
 import xyz.luan.acervus.Service;
 
@@ -13,7 +13,7 @@ public class RenewalAction extends Action<User> {
 
     private final static Logger LOGGER = Logger.getLogger(RenewalAction.class.getName());
 
-    @PUT("renewal")
+    @GET("renewal")
     public List<String> renewalAll() {
         List<String> results = new ArrayList<>();
         for (User user : yawp(User.class).list()) {

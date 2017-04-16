@@ -1,7 +1,7 @@
 package xyz.luan.acervus.model;
 
 import io.yawp.commons.http.HttpException;
-import io.yawp.commons.http.annotation.PUT;
+import io.yawp.commons.http.annotation.GET;
 import io.yawp.repository.shields.Shield;
 
 import javax.mail.internet.AddressException;
@@ -26,7 +26,7 @@ public class UserShield extends Shield<User> {
         allow();
     }
 
-    public static boolean isValidEmailAddress(String email) {
+    private static boolean isValidEmailAddress(String email) {
         try {
             new InternetAddress(email).validate();
             return true;
@@ -35,7 +35,7 @@ public class UserShield extends Shield<User> {
         }
     }
 
-    @PUT("renewal")
+    @GET("renewal")
     public void renewalAll() {
         allow();
     }
