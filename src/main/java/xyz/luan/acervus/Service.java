@@ -55,7 +55,7 @@ public class Service {
     }
 
     private static String getToday() {
-        SimpleDateFormat sdf = new SimpleDateFormat("DD/MM/yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         sdf.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
 
         String today = sdf.format(new Date());
