@@ -1,5 +1,9 @@
 package xyz.luan.acervus;
 
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,9 +16,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-public class Main {
+public class Service {
 
     private static final String DOMAIN = "http://acervus.unicamp.br/";
 
@@ -24,11 +27,21 @@ public class Main {
         renewal(user, pass);
     }
 
-    private static void renewal(String user, String pass) throws IOException {
+    public static void renewal(String user, String pass) throws IOException {
         final String today = new SimpleDateFormat("DD/MM/yyyy").format(new Date());
         Map<String, String> cookies = doLogin(user, pass);
         List<Book> ids = extractBookIds(cookies);
-        String sCods = ids.stream().filter(b -> b.date.equals(today)).map(b -> b.id).collect(Collectors.joining(","));
+        String sCods = FluentIterable.from(ids).filter(new Predicate<Book>() {
+            @Override
+            public boolean apply(Book book) {
+                return book.date.equals(today);
+            }
+        }).transform(new Function<Book, String>() {
+            @Override
+            public String apply(Book book) {
+                return book.id;
+            }
+        }).join(Joiner.on(","));
         if (sCods.isEmpty()) {
             System.out.println("Nothing to renewal!");
             return;
