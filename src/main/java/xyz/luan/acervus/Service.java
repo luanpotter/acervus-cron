@@ -9,6 +9,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import xyz.luan.facade.HttpFacade;
+import xyz.luan.facade.Response;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
