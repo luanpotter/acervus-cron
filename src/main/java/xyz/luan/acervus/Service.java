@@ -50,8 +50,9 @@ public class Service {
         String url = "index.asp?content=circulacoes&acao=renovacao&num_circulacao=" + sCods;
         HttpFacade renewal = new HttpFacade(DOMAIN + url);
         renewal.cookies(cookies);
-        renewal.get();
-        return "Renewed " + count + " books.";
+        Response r = renewal.get();
+        LOGGER.info(r.status() + " - " + r.content());
+        return "Renewed " + count + " books: " + sCods;
     }
 
     private static String getToday() {
